@@ -1,0 +1,29 @@
+# Xcode specific
+.DS_Store
+*.xcuserstate
+*.xcworkspace
+xcuserdata/
+DerivedData/
+build/
+*.log
+*.swp
+
+# SwiftPM
+Package.pins
+Package.resolved
+
+# CocoaPods
+Pods/
+Podfile.lock
+
+# Carthage
+Carthage/
+
+# xcodesign
+.xcodesign/
+
+# Archives
+*.xcarchive
+
+# Swift Package Manager
+.swiftpm/
