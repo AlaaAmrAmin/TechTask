@@ -16,7 +16,7 @@ final class RecipesListSnapshotTests: XCTestCase {
         ])
         
         // Then
-        assertSnapshot(matching: viewController, as: .image)
+        assertSnapshot(of: viewController, as: .image)
     }
     
     func test_whenNoFavoriteRecipes_andShowFavoritesIsTrue_thenShowsOnlyNonFavorites() {
@@ -27,7 +27,7 @@ final class RecipesListSnapshotTests: XCTestCase {
         ])
         
         // Then
-        assertSnapshot(matching: viewController, as: .image)
+        assertSnapshot(of: viewController, as: .image)
     }
     
     func test_whenHasFavoriteRecipes_andShowFavoritesIsFalse_thenShowsOnlyNonFavorites() {
@@ -41,7 +41,7 @@ final class RecipesListSnapshotTests: XCTestCase {
         )
         
         // Then
-        assertSnapshot(matching: viewController, as: .image)
+        assertSnapshot(of: viewController, as: .image)
     }
     
 }
@@ -52,15 +52,7 @@ extension RecipesListSnapshotTests {
         with recipes: [RecipeUIState],
         showFavorites: Bool = true
     ) -> UIViewController {
-        let state = RecipesListUIState(
-            title: "Recipes",
-            contentState: .loaded(
-                RecipesListUIState.LoadedUIState(
-                    recipes: recipes,
-                    favoritesSectionTitle: "Favorites"
-                )
-            )
-        )
+        let state = RecipesListUIState.stubContent(recipes: recipes)
         
         let view = RecipesListView<Text>(
             uiState: state,

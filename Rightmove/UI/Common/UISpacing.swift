@@ -1,3 +1,5 @@
+import Foundation
+
 struct UISpacing {
     static let small: CGFloat = 4
     static let medium: CGFloat = 8

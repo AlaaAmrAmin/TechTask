@@ -1,10 +1,16 @@
+import SwiftUI
+
+protocol RecipeDetailsInputManaging {
+    func fetchRecipeDetails(with id: Int)
+}
+
 struct RecipeDetailsHostView: View {
     @ObservedObject private var viewModel: RecipeDetailsViewModel
-    private let inputManager: RecipeDetailsInputManaging
+    private let inputManager: RecipeDetailsInputManaging & RecipeDetailsInputHandling
     
     init(
         viewModel: RecipeDetailsViewModel,
-        inputManager: RecipeDetailsInputManaging
+        inputManager: RecipeDetailsInputManaging & RecipeDetailsInputHandling
     ) {
         self.viewModel = viewModel
         self.inputManager = inputManager
@@ -17,9 +23,8 @@ struct RecipeDetailsHostView: View {
                 inputManager: inputManager
             )
             .navigationTitle(viewModel.uiState.title)
-            .navigationBarTitleDisplayMode(.automatic)
             .onAppear {
-                inputManager.fetchRecipeDetails(with: "")
+                inputManager.fetchRecipeDetails(with: viewModel.recipeID)
             }
         }
     }

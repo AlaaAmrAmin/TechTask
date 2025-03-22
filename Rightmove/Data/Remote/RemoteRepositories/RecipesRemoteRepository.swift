@@ -1,11 +1,11 @@
 import Foundation
 
-protocol RecipesRemoteLoader: RemoteDataLoader {
+protocol RecipesRemoteLoader: RemoteDataLoader, Sendable {
     func fetchRecipes(withTags tags: [String], startingFrom itemNumber: Int) async throws -> RecipesDTO
     func fetchRecipe(with id: String) async throws -> RecipeDTO
 }
 
-struct RecipesRemoteRepository: RemoteDataLoader {
+struct RecipesRemoteRepository: RecipesRemoteLoader {
     let requestConstructor: any RequestConstructing
     let client: any Networking
     let pageSize: Int

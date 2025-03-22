@@ -1,58 +1,92 @@
-//
-//  RecipeDetailsOutputObserving.swift
-//  Rightmove
-//
-//  Created by Alaa Amin on 22/03/2025.
-//
-
-
 import Foundation
 
-protocol RecipeDetailsOutputObserving: Sendable {
-    func recipeDidFavorite() async
-    func recipeDidUnfavorite() async
-    func recipeActionDidFail(with error: Error) async
+protocol RecipeDetailsFetchingOutputObserving: Sendable {
+    func recipeDidFetchDetails(_ recipe: Recipe) async
+    func recipeDetailsDidFail() async
 }
 
-protocol RecipeDetailsInputManaging {
-    func toggleFavorite(recipe: Recipes.RecipeOverview, isFavorite: Bool)
+protocol RecipeFavoritingOutputObserving: Sendable {
+    func recipeDidFavorite(recipeID: Int) async
+    func recipeDidUnfavorite(recipeID: Int) async
 }
 
-class RecipeDetailsInputManager: RecipeDetailsInputManaging {
+final class RecipeDetailsInputManager: @unchecked Sendable {
+    private let recipesUseCase: RecipesInput
     private let favoritesUseCase: FavoriteRecipesInput
-    private let observers: [RecipeDetailsOutputObserving]
+    private let fetchingObservers: [RecipeDetailsFetchingOutputObserving]
+    private let favoritingObservers: [RecipeFavoritingOutputObserving]
+    private let observersNotifier: ObserverNotifiable
+    
+    private var recipe: Recipe?
     
     init(
+        recipesUseCase: RecipesInput,
         favoritesUseCase: FavoriteRecipesInput,
-        observers: [RecipeDetailsOutputObserving]
+        fetchingObservers: [RecipeDetailsFetchingOutputObserving],
+        favoritingObservers: [RecipeFavoritingOutputObserving],
+        observersNotifier: some ObserverNotifiable
     ) {
+        self.recipesUseCase = recipesUseCase
         self.favoritesUseCase = favoritesUseCase
-        self.observers = observers
+        self.fetchingObservers = fetchingObservers
+        self.favoritingObservers = favoritingObservers
+        self.observersNotifier = observersNotifier
     }
-    
-    func toggleFavorite(recipe: Recipes.RecipeOverview, isFavorite: Bool) {
-        Task { [weak self] in
+}
+
+extension RecipeDetailsInputManager: RecipeDetailsInputManaging {
+    func fetchRecipeDetails(with id: Int) {
+        Task {
             do {
-                if isFavorite {
-                    try await self?.favoritesUseCase.favorite(recipe)
-                    await self?.notifyObservers { await $0.recipeDidFavorite() }
-                } else {
-                    try await self?.favoritesUseCase.unfavorite(recipe)
-                    await self?.notifyObservers { await $0.recipeDidUnfavorite() }
+                print("Fetch recipe with id \(id)")
+                recipe = try await recipesUseCase.fetchRecipe(with: id)
+                await observersNotifier.notify(observers: fetchingObservers) {
+                    await $0.recipeDidFetchDetails(self.recipe!)
                 }
             } catch {
-                await self?.notifyObservers { await $0.recipeActionDidFail(with: error) }
+                await observersNotifier.notify(observers: fetchingObservers) {
+                    await $0.recipeDetailsDidFail()
+                }
             }
         }
     }
     
-    private func notifyObservers(_ notification: (RecipeDetailsOutputObserving) async -> Void) async {
-        await withTaskGroup(of: Void.self) { group in
-            observers.forEach { observer in
-                group.addTask {
-                    await notification(observer)
+}
+
+///
+/// Needs enhancements to be concurrency safe
+///
+extension RecipeDetailsInputManager: RecipeDetailsInputHandling {
+    func markRecipeAsFavorite(_ isFavorite: Bool) {
+        if let recipe {
+            Task {
+                do {
+                    let recipeOverview = Recipes.RecipeOverview(
+                        id: recipe.id,
+                        thumbnailURL: recipe.thumbnailURL,
+                        name: recipe.name,
+                        description: recipe.description,
+                        positiveRatingPercentage: recipe.positiveRatingPercentage,
+                        cookingTime: recipe.cookingTime
+                    )
+                    
+                    if isFavorite {
+                        try await favoritesUseCase.favorite(recipeOverview)
+                        await observersNotifier.notify(observers: favoritingObservers) {
+                            await $0.recipeDidFavorite(recipeID: recipeOverview.id)
+                        }
+                    } else {
+                        try await favoritesUseCase.unfavorite(recipeOverview)
+                        await observersNotifier.notify(observers: favoritingObservers) {
+                            await $0.recipeDidUnfavorite(recipeID: recipeOverview.id)
+                        }
+                    }
+                } catch {
+                    /// Error handling not implemented
+                    print(error)
                 }
             }
         }
     }
 }
+

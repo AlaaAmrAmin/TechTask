@@ -1,21 +1,9 @@
-//
-//  TagsDTO.swift
-//  Rightmove
-//
-//  Created by Alaa Amin on 19/03/2025.
-//
-
-
-struct TagsDTO: Decodable {
-    let tags: [TagDTO]
-    
-    enum CodingKeys: String, CodingKey {
-        case tags = "results"
-    }
+struct Tags {
+    let list: [Tag]
 }
 
-extension TagsDTO {
-    struct TagDTO: Decodable {
+extension Tags {
+    struct Tag {
         let id: String
         let type: String
         let name: String

@@ -1,11 +1,25 @@
 import Foundation
 
 struct RecipeResponseMapper: ResponseDomainMapping {
-    private let ratingMapper: any ResponseDomainMapping<RecipeDTO.RatingDTO, Double>
-    private let timeMapper: any ResponseDomainMapping<String, Time>
-    private let instructionsMapper: any ResponseDomainMapping<RecipeDTO.InstructionDTO, Recipe.Instruction>
-    private let ingredientsMapper: any ResponseDomainMapping<RecipeDTO.SectionDTO.ComponentDTO, Recipe.Ingredient>
-    private let nutritionMapper: any ResponseDomainMapping<RecipeDTO.NutritionDTO, Recipe.Nutrition>
+    private let ratingMapper: any ResponseRatingMapping
+    private let timeMapper: any ResponseTimeMapping
+    private let instructionsMapper: any ResponseInstructionsMapping
+    private let ingredientsMapper: any ResponseIngredientsMapping
+    private let nutritionMapper: any ResponseNutritionMapping
+    
+    internal init(
+        ratingMapper: some ResponseRatingMapping,
+        timeMapper: some ResponseTimeMapping,
+        instructionsMapper: some ResponseInstructionsMapping,
+        ingredientsMapper: some ResponseIngredientsMapping,
+        nutritionMapper: some ResponseNutritionMapping
+    ) {
+        self.ratingMapper = ratingMapper
+        self.timeMapper = timeMapper
+        self.instructionsMapper = instructionsMapper
+        self.ingredientsMapper = ingredientsMapper
+        self.nutritionMapper = nutritionMapper
+    }
     
     func map(_ dto: RecipeDTO) -> Recipe {
         return Recipe(
@@ -14,11 +28,12 @@ struct RecipeResponseMapper: ResponseDomainMapping {
             name: dto.name,
             description: dto.description,
             positiveRatingPercentage: dto.rating.map(ratingMapper.map),
-            prepTime: dto.prepTimeInMinutes.map(timeMapper.map),
-            cookingTime: dto.cookingTimeInMinutes.map(timeMapper.map),
-            instructions: dto.instructions.map(instructionsMapper.map),
-            ingredients: dto.sections.first?.components.map(ingredientsMapper.map) ?? [],
-            nutrition: dto.nutrition.map(nutritionMapper.map)
+            prepTime: dto.prepTimeInMinutes.flatMap(timeMapper.map),
+            cookingTime: dto.cookingTimeInMinutes.flatMap(timeMapper.map),
+            instructions: instructionsMapper.map(dto.instructions),
+            ingredients: ingredientsMapper.map(dto.sections.first?.components ?? []),
+            nutrition: dto.nutrition.map(nutritionMapper.map),
+            isFavorite: false
         )
     }
 }

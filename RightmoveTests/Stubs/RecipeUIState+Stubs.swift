@@ -1,10 +1,4 @@
-//
-//  File.swift
-//  Rightmove
-//
-//  Created by Alaa Amin on 22/03/2025.
-//
-
+@testable import Rightmove
 
 extension RecipeUIState {
     static func stubRecipe(

@@ -1,13 +1,15 @@
+import SwiftUI
+
 struct InstructionsView: View {
     let instructions: [String]
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: UISpacing.medium) {
             Text("Instructions")
                 .font(.headline)
             
-            ForEach(Array(instructions.enumerated()), id: \.offset) { index, instruction in
-                Text("\(index + 1). \(instruction)")
+            ForEach(instructions, id: \.self) {
+                Text($0)
                     .padding(.bottom, 4)
             }
         }

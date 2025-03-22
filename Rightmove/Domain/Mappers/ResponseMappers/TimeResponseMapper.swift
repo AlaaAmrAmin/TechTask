@@ -1,9 +1,5 @@
 struct TimeResponseMapper: ResponseDomainMapping {
-    func map(_ minutes: String) -> Time? {
-        guard let minutes = Int(minutes) else {
-            return nil
-        }
-        
+    func map(_ minutes: Int) -> Time {
         return Time(
             hours: minutes / 60,
             minutes: minutes % 60

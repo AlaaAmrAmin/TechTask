@@ -1,3 +1,7 @@
+protocol RecipesEntityMapping: Sendable {
+    func map(_ entities: [RecipeEntity]) -> Recipes
+}
+
 struct RecipesEntityMapper: RecipesEntityMapping {
     private let recipeMapper: RecipeEntityMapping
     

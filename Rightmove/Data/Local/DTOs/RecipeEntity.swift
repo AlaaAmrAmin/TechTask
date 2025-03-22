@@ -1,14 +1,8 @@
-struct RecipeDTO: Encodable {
+struct RecipeEntity: Codable {
+    let id: Int
     let thumbnailURL: String?
     let name: String
     let description: String
-    let rating: RatingDTO?
-    let cookingTimeInMinutes: String?
-}
-
-extension RecipeDTO {
-    struct RatingDTO: Encodable {
-        let negativeCount: Int
-        let positiveCount: Int
-    }
+    let positiveRatingPercentage: Double?
+    let cookingTime: Time?
 }

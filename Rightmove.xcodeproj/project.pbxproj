@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		13E73EC92D8F531C00FC476D /* InlineSnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 13E73EC82D8F531C00FC476D /* InlineSnapshotTesting */; };
+		13E73ECB2D8F531C00FC476D /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 13E73ECA2D8F531C00FC476D /* SnapshotTesting */; };
+		13E73ECD2D8F531C00FC476D /* SnapshotTestingCustomDump in Frameworks */ = {isa = PBXBuildFile; productRef = 13E73ECC2D8F531C00FC476D /* SnapshotTestingCustomDump */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		133587322D8B352B00F0FC41 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -59,6 +65,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				13E73ECD2D8F531C00FC476D /* SnapshotTestingCustomDump in Frameworks */,
+				13E73EC92D8F531C00FC476D /* InlineSnapshotTesting in Frameworks */,
+				13E73ECB2D8F531C00FC476D /* SnapshotTesting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,6 +88,7 @@
 				133587342D8B352B00F0FC41 /* RightmoveTests */,
 				1335873E2D8B352B00F0FC41 /* RightmoveUITests */,
 				133587222D8B352800F0FC41 /* Products */,
+				9E795B19B93BE451B91B2B55 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -90,6 +100,13 @@
 				1335873B2D8B352B00F0FC41 /* RightmoveUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		9E795B19B93BE451B91B2B55 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -111,8 +128,6 @@
 				133587232D8B352800F0FC41 /* Rightmove */,
 			);
 			name = Rightmove;
-			packageProductDependencies = (
-			);
 			productName = Rightmove;
 			productReference = 133587212D8B352800F0FC41 /* Rightmove.app */;
 			productType = "com.apple.product-type.application";
@@ -134,8 +149,6 @@
 				133587342D8B352B00F0FC41 /* RightmoveTests */,
 			);
 			name = RightmoveTests;
-			packageProductDependencies = (
-			);
 			productName = RightmoveTests;
 			productReference = 133587312D8B352B00F0FC41 /* RightmoveTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -157,8 +170,6 @@
 				1335873E2D8B352B00F0FC41 /* RightmoveUITests */,
 			);
 			name = RightmoveUITests;
-			packageProductDependencies = (
-			);
 			productName = RightmoveUITests;
 			productReference = 1335873B2D8B352B00F0FC41 /* RightmoveUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -195,6 +206,9 @@
 			);
 			mainGroup = 133587182D8B352800F0FC41;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				13E73EC72D8F531C00FC476D /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 133587222D8B352800F0FC41 /* Products */;
 			projectDirPath = "";
@@ -402,8 +416,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -412,7 +425,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.alaa.a.amin.Rightmove;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -431,8 +444,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -441,7 +453,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.alaa.a.amin.Rightmove;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -558,6 +570,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		13E73EC72D8F531C00FC476D /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.18.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		13E73EC82D8F531C00FC476D /* InlineSnapshotTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 13E73EC72D8F531C00FC476D /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = InlineSnapshotTesting;
+		};
+		13E73ECA2D8F531C00FC476D /* SnapshotTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 13E73EC72D8F531C00FC476D /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = SnapshotTesting;
+		};
+		13E73ECC2D8F531C00FC476D /* SnapshotTestingCustomDump */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 13E73EC72D8F531C00FC476D /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = SnapshotTestingCustomDump;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 133587192D8B352800F0FC41 /* Project object */;
 }

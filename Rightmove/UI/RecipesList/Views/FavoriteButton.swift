@@ -1,11 +1,14 @@
+import SwiftUI
+
 struct FavoriteButton: View {
-    @Binding var isSelected: Bool
+    let isSelected: Bool
+    let onFavoriteToggle: (Bool) -> Void
     
     var body: some View {
         HStack {
             Spacer()
             Button(action: {
-                isSelected.toggle()
+                onFavoriteToggle(!isSelected)
             }) {
                 Image(systemName: isSelected ? "heart.fill" : "heart")
                     .foregroundColor(.red)

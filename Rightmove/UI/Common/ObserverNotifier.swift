@@ -1,13 +1,17 @@
 import Foundation
 
-struct ObserverNotifier<Observer: Sendable> {
-    private let observers: [Observer]
-    
-    init(observers: [Observer]) {
-        self.observers = observers
-    }
-    
-    func notify(_ notification: @Sendable @escaping (Observer) async -> Void) async {
+protocol ObserverNotifiable: Sendable {
+    func notify<Observer: Sendable>(
+        observers: [Observer],
+        _ notification: @Sendable @escaping (Observer) async -> Void
+    ) async
+}
+
+struct ObserverNotifier: Sendable, ObserverNotifiable {
+    func notify<Observer: Sendable>(
+        observers: [Observer],
+        _ notification: @Sendable @escaping (Observer) async -> Void
+    ) async {
         await withTaskGroup(of: Void.self) { group in
             observers.forEach { observer in
                 group.addTask {

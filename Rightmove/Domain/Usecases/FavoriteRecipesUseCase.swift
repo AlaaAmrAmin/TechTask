@@ -1,53 +1,39 @@
-//import Foundation
-//
-//protocol FavouriteRecipeInput {
-//    func favourite(withTags tags: [String]) async throws -> [Recipes.RecipeOverview]
-//    func fetchMoreRecipes(withTags tags: [String]) async throws -> [Recipes.RecipeOverview]
-//    func fetchRecipe(with id: String) async throws -> Recipe
-//}
-//
-//class RecipesUseCase: RecipesInput {
-//    private var recipes: [Recipes.RecipeOverview] = []
-//    private var totalNumberOfRecipes = 0
-//    private let repository: any RecipesRemoteLoader
-//    private let recipesResponseMapper: any ResponseDomainMapping<RecipesDTO, Recipes>
-//    private let recipeResponseMapper: any ResponseDomainMapping<RecipeDTO, Recipe>
-//    
-//    init(
-//        repository: some RecipesRemoteLoader,
-//        recipesResponseMapper: some ResponseDomainMapping<RecipesDTO, Recipes>,
-//        recipeResponseMapper: some ResponseDomainMapping<RecipeDTO, Recipe>
-//    ) {
-//        self.repository = repository
-//        self.recipesResponseMapper = recipesResponseMapper
-//        self.recipeResponseMapper = recipeResponseMapper
-//    }
-//    
-//    func fetchRecipes(withTags tags: [String]) async throws -> [Recipes.RecipeOverview] {
-//        let recipes = try await fetchRecipes(withTags: tags, startingFrom: 0)
-//        self.recipes = recipes.list
-//        self.totalNumberOfRecipes = recipes.totalNumberOfRecipes
-//        return self.recipes
-//    }
-//    
-//    func fetchMoreRecipes(withTags tags: [String]) async throws -> [Recipes.RecipeOverview] {
-//        guard recipes.count < totalNumberOfRecipes  else {
-//            return []
-//        }
-//        
-//        let recipes = try await fetchRecipes(withTags: tags, startingFrom: recipes.count - 1)
-//        self.recipes.append(contentsOf: recipes.list)
-//        return recipes.list
-//    }
-//    
-//    func fetchRecipe(with id: String) async throws -> Recipe {
-//        let recipeDTO = try await repository.fetchRecipe(with: id)
-//        return recipeResponseMapper.map(recipeDTO)
-//    }
-//    
-//    private func fetchRecipes(withTags tags: [String], startingFrom itemNumber: Int) async throws -> Recipes {
-//        let recipesDTO = try await repository.fetchRecipes(withTags: tags, startingFrom: itemNumber)
-//        return recipesResponseMapper.map(recipesDTO)
-//    }
-//}
-//
+import Foundation
+
+protocol FavoriteRecipesInput: Sendable {
+    func fetchFavorites() async throws -> [Recipes.RecipeOverview]
+    func favorite(_ recipe: Recipes.RecipeOverview) async throws
+    func unfavorite(_ recipe: Recipes.RecipeOverview) async throws
+}
+
+struct FavoriteRecipesUseCase: FavoriteRecipesInput {
+    private let repository: any RecipesLocalLoader
+    private let recipesMapper: any RecipesEntityMapping
+    private let recipeMapper: any RecipeEntityMapping
+    
+    init(
+        repository: some RecipesLocalLoader,
+        recipesMapper: some RecipesEntityMapping,
+        recipeMapper: some RecipeEntityMapping
+    ) {
+        self.repository = repository
+        self.recipesMapper = recipesMapper
+        self.recipeMapper = recipeMapper
+    }
+    
+    func fetchFavorites() async throws -> [Recipes.RecipeOverview] {
+        let recipeEntities = try await repository.fetchRecipes()
+        return recipesMapper.map(recipeEntities).list
+    }
+    
+    func favorite(_ recipe: Recipes.RecipeOverview) async throws {
+        let entity = recipeMapper.map(recipe)
+        return try await repository.store(entity)
+    }
+    
+    func unfavorite(_ recipe: Recipes.RecipeOverview) async throws {
+        let entity = recipeMapper.map(recipe)
+        return try await repository.delete(entity)
+    }
+}
+

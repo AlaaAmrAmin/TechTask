@@ -1,10 +1,3 @@
-//
-//  RightmoveTests.swift
-//  RightmoveTests
-//
-//  Created by Alaa Amin on 19/03/2025.
-//
-
 import XCTest
 @testable import Rightmove
 

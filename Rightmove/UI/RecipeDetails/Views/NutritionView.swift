@@ -1,3 +1,5 @@
+import SwiftUI
+
 struct NutritionView: View {
     let nutrition: RecipeDetailsUIState.RecipeDetails.NutritionUIState
     
@@ -6,16 +8,18 @@ struct NutritionView: View {
             Text("Nutrition")
                 .font(.headline)
             
+            let info = nutrition.info
+            
             HStack {
-                nutritionItem("Calories", nutrition.calories)
-                nutritionItem("Carbs", nutrition.carbohydrates)
-                nutritionItem("Fat", nutrition.fat)
+                ForEach(0 ..< info.count / 2, id: \.self) { index in
+                    nutritionItem(info[index].info, info[index].nutrition)
+                }
             }
             
             HStack {
-                nutritionItem("Fiber", nutrition.fiber)
-                nutritionItem("Protein", nutrition.protein)
-                nutritionItem("Sugar", nutrition.sugar)
+                ForEach(info.count / 2 ..< info.count, id: \.self) { index in
+                    nutritionItem(info[index].info, info[index].nutrition)
+                }
             }
         }
     }

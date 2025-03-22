@@ -1,12 +1,11 @@
-//
-//  File.swift
-//  Rightmove
-//
-//  Created by Alaa Amin on 22/03/2025.
-//
+import Foundation
 
+protocol TimeUIFormatting {
+    func formatTime(_ time: Time) -> String?
+}
 
- private func formatTime(_ time: Time) -> String? {
+struct TimeUIFormatter: TimeUIFormatting {
+    func formatTime(_ time: Time) -> String? {
         let hours = time.hours == 1 ? Copy.hour : Copy.hours
         let minutes = time.minutes == 1 ? Copy.minute : Copy.minutes
         var formattedTimed = ""
@@ -22,3 +21,11 @@
         }
         return formattedTimed.isEmpty ? nil : formattedTimed
     }
+    
+    enum Copy {
+        static let hour: String = "hour"
+        static let hours: String = "hours"
+        static let minute: String = "minute"
+        static let minutes: String = "minutes"
+    }
+}

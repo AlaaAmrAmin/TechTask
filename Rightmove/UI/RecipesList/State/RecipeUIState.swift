@@ -1,9 +1,10 @@
-import UIKit
+import Foundation
 
-struct RecipeUIState: Identifiable {
+struct RecipeUIState: Identifiable, Equatable {
     let id: Int
-    let image: UIImage
+    let imageURL: URL?
     let title: String
-    let cookingDuration: String
-    let rating: String
+    let cookingDuration: String?
+    let rating: String?
+    var isFavorite: Bool
 }

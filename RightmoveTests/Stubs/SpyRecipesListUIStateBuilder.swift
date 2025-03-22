@@ -1,10 +1,10 @@
 @testable import Rightmove
 
-class RecipesListUIStateBuilderSpy: RecipesListUIStateBuilding {
+class SpyRecipesListUIStateBuilder: RecipesListUIStateBuilding {
     private(set) var calls: [Call] = []
     var stubbedUIState = RecipesListUIState.stubContent(recipes: [])
     
-    enum Call {
+    enum Call: Equatable {
         case buildLoading
         case buildContent(recipes: [Recipes.RecipeOverview])
         case buildUpdateContentWithNewRecipes(currentState: RecipesListUIState, newRecipes: [Recipes.RecipeOverview])
@@ -44,5 +44,8 @@ class RecipesListUIStateBuilderSpy: RecipesListUIStateBuilding {
         return stubbedUIState
     }
     
+    func reset() {
+        calls = []
+    }
     
 }

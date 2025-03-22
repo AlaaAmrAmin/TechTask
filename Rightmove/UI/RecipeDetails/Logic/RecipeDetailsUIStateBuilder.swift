@@ -3,10 +3,17 @@ import Foundation
 protocol RecipeDetailsUIStateBuilding {
     func buildLoadingState() -> RecipeDetailsUIState
     func buildContentState(from recipe: Recipe) -> RecipeDetailsUIState
+    func buildUpdatedContentState(currentState: RecipeDetailsUIState, isFavorite: Bool) -> RecipeDetailsUIState
     func buildErrorState() -> RecipeDetailsUIState
 }
 
 struct RecipeDetailsUIStateBuilder: RecipeDetailsUIStateBuilding {
+    private let timeFormatter: TimeUIFormatting
+    
+    init(timeFormatter: some TimeUIFormatting) {
+        self.timeFormatter = timeFormatter
+    }
+    
     func buildLoadingState() -> RecipeDetailsUIState {
         .init(
             title: Copy.title,
@@ -23,14 +30,27 @@ struct RecipeDetailsUIStateBuilder: RecipeDetailsUIStateBuilding {
                     description: recipe.description,
                     imageURL: recipe.thumbnailURL,
                     rating: recipe.positiveRatingPercentage.map { "\(Int($0))%" },
-                    prepTime: recipe.prepTime.map { formatTime($0) },
-                    cookingTime: recipe.cookingTime.map { formatTime($0) },
-                    instructions: recipe.instructions.map(\..description),
-                    ingredients: recipe.ingredients.map(\..description),
+                    prepTime: recipe.prepTime.flatMap(timeFormatter.formatTime),
+                    cookingTime: recipe.cookingTime.flatMap(timeFormatter.formatTime),
+                    instructions: buildInstructions(recipe.instructions),
+                    ingredients: buildIngredients(recipe.ingredients),
                     nutrition: recipe.nutrition.map(buildNutritionState),
-                    isFavorite: false
+                    isFavorite: recipe.isFavorite
                 )
             )
+        )
+    }
+    
+    func buildUpdatedContentState(currentState: RecipeDetailsUIState, isFavorite: Bool) -> RecipeDetailsUIState {
+        guard case var .loaded(recipe) = currentState.contentState else {
+            return currentState
+        }
+        
+        recipe.isFavorite = isFavorite
+        
+        return .init(
+            title: currentState.title,
+            contentState: .loaded(recipe)
         )
     }
     
@@ -41,21 +61,33 @@ struct RecipeDetailsUIStateBuilder: RecipeDetailsUIStateBuilding {
         )
     }
     
-    private func formatTime(_ time: Time) -> String {
-        let hours = time.hours == 1 ? "hour" : "hours"
-        let minutes = time.minutes == 1 ? "minute" : "minutes"
-        return "\(time.hours)\(hours) \(time.minutes)\(minutes)"
-    }
-    
     private func buildNutritionState(_ nutrition: Recipe.Nutrition) -> RecipeDetailsUIState.RecipeDetails.NutritionUIState {
         .init(
-            calories: "\(nutrition.calories)cal",
-            carbohydrates: "\(nutrition.carbohydrates)g",
-            fat: "\(nutrition.fat)g",
-            fiber: "\(nutrition.fiber)g",
-            protein: "\(nutrition.protein)g",
-            sugar: "\(nutrition.sugar)g"
+            info: [
+                ("Calories", "\(nutrition.calories)cal"),
+                ("Carbs", "\(nutrition.carbohydrates)g"),
+                ("Fat", "\(nutrition.fat)g"),
+                ("Fiber", "\(nutrition.fiber)g"),
+                ("Protein", "\(nutrition.protein)g"),
+                ("Sugar", "\(nutrition.sugar)g")
+            ]
         )
+    }
+    
+    private func buildInstructions(_ instructions: [Recipe.Instruction]) -> [String] {
+        var formattedInstructions = [String]()
+        for i in 0 ..< instructions.count {
+            formattedInstructions.append("\(i + 1). \(instructions[i].description)")
+        }
+        return formattedInstructions
+    }
+    
+    private func buildIngredients(_ ingredients: [Recipe.Ingredient]) -> [String] {
+        var formattedIngredients = [String]()
+        for i in 0 ..< ingredients.count {
+            formattedIngredients.append("• \(ingredients[i].description)")
+        }
+        return formattedIngredients
     }
 }
 

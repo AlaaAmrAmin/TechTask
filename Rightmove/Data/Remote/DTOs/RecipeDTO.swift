@@ -1,15 +1,17 @@
 struct RecipeDTO: Decodable {
+    let id: Int
     let thumbnailURL: String?
     let name: String
     let description: String
     let rating: RatingDTO?
-    let prepTimeInMinutes: String?
-    let cookingTimeInMinutes: String?
+    let prepTimeInMinutes: Int?
+    let cookingTimeInMinutes: Int?
     let instructions: [InstructionDTO]
     let sections: [SectionDTO]
     let nutrition: NutritionDTO?
     
     enum CodingKeys: String, CodingKey {
+        case id
         case thumbnailURL = "thumbnail_url"
         case name
         case description
@@ -63,7 +65,7 @@ extension RecipeDTO {
         
         struct ComponentDTO: Decodable {
             let description: String
-            let position: String
+            let position: Int
             
             enum CodingKeys: String, CodingKey {
                 case description = "raw_text"
